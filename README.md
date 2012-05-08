@@ -1,4 +1,4 @@
 WhiskeyDroid
 ============
 
-v0 android client
+v0 android prototype client

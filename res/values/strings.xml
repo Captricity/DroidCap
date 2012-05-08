@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hello">Hello World, WhiskeyDroidActivity!</string>
+    <string name="app_name">WhiskeyDroid</string>
+    <string name="hint">Type URL here</string>
+    <string name="takepicture">Take Picture; Will Last Longer</string>
+    <string name="image">Your Image:</string>
+    <string name="shipit">Ship It!</string>
+
+</resources>
