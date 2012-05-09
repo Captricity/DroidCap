@@ -2,6 +2,14 @@ package com.example.whiskeydroid;
 
 import java.util.ArrayList;
 
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.BasicResponseHandler;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import android.app.IntentService;
 import android.content.Intent;
 import android.os.Bundle;
@@ -26,11 +34,7 @@ public class QueryCaptricityAPI extends IntentService {
 	        if (command.equals("query")) {
 	            receiver.send(RUNNING, Bundle.EMPTY);
 	            try {
-	                // get some data or something           
-	            	ArrayList<String> results = new ArrayList<String>();
-	            	results.add("Doc1");
-	            	results.add("Doc2");
-	            	results.add("Doc3");
+	            	ArrayList<String> results = getDocumentList();
 	            	b.putStringArrayList("results", results);
 	                receiver.send(FINISHED, b);
 	            } catch(Exception e) {
@@ -41,5 +45,34 @@ public class QueryCaptricityAPI extends IntentService {
 	        this.stopSelf();
 		
 	}
+	
+	/* http://blog.sptechnolab.com/2011/03/09/android/android-upload-image-to-server/ */
+    private ArrayList<String> getDocumentList() {
+    	//ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+    	//nameValuePairs.add(new BasicNameValuePair("image", ba1));
+    	ArrayList<String> document_names = new ArrayList<String>();
+    	String get_url = "https://nightly.captricity.com/api/shreddr/document/";
+    	try{
+    		HttpClient httpclient = new DefaultHttpClient();
+    		HttpGet document_list_get = new HttpGet(get_url);
+    		document_list_get.addHeader("Accept", "text/json");
+    		document_list_get.addHeader("User-Agent", "nick-android-app-v0-0.1");
+    		document_list_get.addHeader("X_API_TOKEN", "db5fa1b05d17441191a921c390d5d34c");
+    		document_list_get.addHeader("X_API_VERSION", "0.01b");
+    		ResponseHandler<String> responseHandler = new BasicResponseHandler();
+    		String response = httpclient.execute(document_list_get, responseHandler);
+    		JSONArray document_list = new JSONArray(response);
+    		for (int i = 0; i < document_list.length(); i++) {
+    			JSONObject document = document_list.getJSONObject(i);
+    			String name = document.getString("name");
+    			document_names.add(name);
+    		}
+    		Log.w("GETRESULT", response);
+    	} catch(Exception e) {
+    		e.printStackTrace();
+    	}
+    	return document_names;
+    }
+
 
 }

@@ -38,6 +38,7 @@ public class ListDocumentsActivity extends ListActivity implements CaptricityRes
 		case QueryCaptricityAPI.FINISHED:
 			Log.i("LDA", "FINISHED");
 			ArrayList<String> results = resultData.getStringArrayList("results");
+			listItems.clear();
 			for (String result:results) {
 				Log.i("LDA", "Adding item" + result);
 				listItems.add(result);
