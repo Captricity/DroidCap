@@ -3,13 +3,10 @@ package com.example.whiskeydroid;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -38,6 +35,17 @@ import android.widget.Toast;
 /** Mostly from http://developer.android.com/guide/topics/media/camera.html#intent-receive **/
 
 public class WhiskeyDroidActivity extends Activity {
+	
+	/** Called when the activity is first created. */
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+    	super.onCreate(savedInstanceState);
+    	setContentView(R.layout.main);
+    	createPhotoButton();
+    	createPostButton();
+    	createDocButton();
+    }
+    
 	private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
 	private static String path_to_photo = null;
 	
@@ -81,15 +89,7 @@ public class WhiskeyDroidActivity extends Activity {
 	
 	private static Button photo_button;
 	private static Button post_button;
-	
-    /** Called when the activity is first created. */
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-    	super.onCreate(savedInstanceState);
-    	setContentView(R.layout.main);
-    	createPhotoButton();
-    	createPostButton();
-    }
+	private static Button doc_button;
     
     private void createPhotoButton() {
     	photo_button = (Button) findViewById(R.id.photo_button);
@@ -121,6 +121,17 @@ public class WhiskeyDroidActivity extends Activity {
         });     	
     }
     
+    private void createDocButton() {   
+      	doc_button = (Button) findViewById(R.id.list_doc_button);
+    	doc_button .setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+            	Intent listDocIntent = new Intent(v.getContext(), ListDocumentsActivity.class);
+            	startActivity(listDocIntent);
+            		
+            }
+        });     	
+    }
+ 
     private void displayNoPhotoAlert() {
 	   new AlertDialog.Builder(this).setMessage("You haven't taken a photo to post yet!")  
        .setTitle("No Photo To Post")  
@@ -134,7 +145,6 @@ public class WhiskeyDroidActivity extends Activity {
        .show(); 
    }
    
-    //TODO image takes up too much memory
     private void setThumbnailImage() {
     	if (path_to_photo == null) {
     		return;
@@ -164,9 +174,7 @@ public class WhiskeyDroidActivity extends Activity {
     		HttpClient httpclient = new DefaultHttpClient();
     		HttpPost httppost = new HttpPost(post_url);
     		httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-    		HttpResponse response = httpclient.execute(httppost);
-    		HttpEntity entity = response.getEntity();
-    		InputStream is = entity.getContent();
+    		httpclient.execute(httppost);
     	} catch(Exception e) {
     		displayPostFailAlert(post_url);
     		e.printStackTrace();

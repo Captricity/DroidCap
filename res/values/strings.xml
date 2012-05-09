@@ -7,5 +7,8 @@
     <string name="takepicture">Take Picture; Will Last Longer</string>
     <string name="image">Your Image:</string>
     <string name="shipit">Ship It!</string>
+    <string name="takepicture2">Take Picture</string>
+    <string name="listdocs">List Documents</string>
+    <string name="photoalttext">Photo Preview</string>
 
 </resources>
