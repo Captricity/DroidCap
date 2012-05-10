@@ -31,8 +31,8 @@ public class ListDocumentsActivity extends ListActivity implements CaptricityRes
 		adapter = new ArrayAdapter<DocumentData>(this, R.layout.listdocs, listItems);
 		setListAdapter(adapter);
 	    final Intent intent = new Intent(Intent.ACTION_SYNC, null, this, QueryCaptricityAPI.class);
-	    intent.putExtra("receiver", mReceiver);
-	    intent.putExtra("command", "query");
+	    intent.putExtra(QueryCaptricityAPI.receiverKey, mReceiver);
+	    intent.putExtra(QueryCaptricityAPI.commandKey, QueryCaptricityAPI.listDocs);
 	    startService(intent);
 	}
 	
@@ -41,40 +41,18 @@ public class ListDocumentsActivity extends ListActivity implements CaptricityRes
 		DocumentData item = listItems.get(position);
 		Log.w("LDA", "You clicked " + item + "!");
 		Intent docDetailsIntent = new Intent(v.getContext(), DocumentDetailsActivity.class);
-		// TODO: doc id
 		docDetailsIntent.putExtra(DocumentDetailsActivity.document_data_key, item);
         startActivity(docDetailsIntent);
 	}
 
-	/*
-	@Override
-	public boolean onContextItemSelected(MenuItem item) {
-		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-		String doc_name = adapter.getItem(info.position);
-		Log.w("LDA", "TOUCHED " + doc_name);
-        Toast.makeText(this, "clicked " + doc_name, Toast.LENGTH_LONG).show();
-        return true;
-	}
-	*/
-
 	public void onReceiveResult(int resultCode, Bundle resultData) {
-		switch (resultCode) {
-		case QueryCaptricityAPI.RUNNING:
-			Log.i("LDA", "RUNNING");
-			break;
-		case QueryCaptricityAPI.FINISHED:
-			Log.i("LDA", "FINISHED");
-			ArrayList<DocumentData> results = resultData.getParcelableArrayList("results");
+		if (resultCode == QueryCaptricityAPI.FINISHED) {
+			ArrayList<DocumentData> results = resultData.getParcelableArrayList(QueryCaptricityAPI.resultKey);
 			listItems.clear();
 			for (DocumentData result:results) {
-				Log.i("LDA", "Adding item" + result);
 				listItems.add(result);
 			}
 			adapter.notifyDataSetChanged();
-			break;
-		case QueryCaptricityAPI.ERROR:
-			Log.i("LDA", "ERROR");
-			break;
 		}
 	}
 }

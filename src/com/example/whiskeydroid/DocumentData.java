@@ -1,5 +1,8 @@
 package com.example.whiskeydroid;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -14,13 +17,21 @@ public class DocumentData implements Parcelable {
 	private boolean is_frozen;
 	private String created;
 	private String modified; 
+	private ArrayList<JobData> jobs;
+	
+	public DocumentData() {
+		jobs = new ArrayList<JobData>();
+		
+	}
 	
 	public DocumentData(String _name, int _id) {
+		this();
 		name = _name;
 		id = _id;
 	}
 	
 	public DocumentData(JSONObject json) {
+		this();
 		try {
 			name = json.getString("name");
 			id = json.getInt("id");
@@ -35,8 +46,15 @@ public class DocumentData implements Parcelable {
 	}
 	
 	private DocumentData(Parcel in) {
+		this();
 		name = in.readString();
 		id = in.readInt();
+		sheet_count = in.readInt();
+		conversion_status = in.readString();
+		is_frozen = in.readByte() == 1;
+		created = in.readString();
+		modified = in.readString();
+		in.readTypedList(jobs, JobData.CREATOR);
 	}
 	
 	public int getId() {
@@ -60,6 +78,12 @@ public class DocumentData implements Parcelable {
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeString(name);
 		dest.writeInt(id);
+		dest.writeInt(sheet_count);
+		dest.writeString(conversion_status);
+		dest.writeByte((byte) (is_frozen ? 1 : 0));
+		dest.writeString(created);
+		dest.writeString(modified);
+		dest.writeList(jobs);
 	}
 	
 	 public int getSheetCount() {
@@ -100,6 +124,26 @@ public class DocumentData implements Parcelable {
 
 	public void setModified(String modified) {
 		this.modified = modified;
+	}
+	
+	public void filterJobs(ArrayList<JobData> all_jobs) {
+		for (JobData job:all_jobs) {
+			if (job.getDocumentId() == this.id) {
+				this.jobs.add(job);
+			}
+		}
+	}
+	
+	public int getJobCount() {
+		return this.jobs.size();
+	}
+	
+	public int getPendingISets() {
+		int total_isets = 0;
+		for (JobData job:jobs) {
+			total_isets += job.getPendingISets();
+		}
+		return total_isets;
 	}
 
 	public static final Parcelable.Creator<DocumentData> CREATOR

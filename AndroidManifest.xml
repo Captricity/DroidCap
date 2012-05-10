@@ -26,6 +26,8 @@
         <activity android:name="ListDocumentsActivity"></activity>
         <service android:name="QueryCaptricityAPI"></service>
         <activity android:name="DocumentDetailsActivity"></activity>
+        <activity android:name="AddImagesActivity"></activity>
+        <activity android:name="LaunchJobActivity"></activity>
     </application>
 
 </manifest>

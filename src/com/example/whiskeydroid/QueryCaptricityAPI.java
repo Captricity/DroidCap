@@ -25,6 +25,12 @@ public class QueryCaptricityAPI extends IntentService {
 	public static final String api_user_agent = "nick-android-app-v0-0.1";
 	public static final String api_auth_token = "db5fa1b05d17441191a921c390d5d34c";
 	public static final String api_version = "0.01b";
+	public static final String resultKey = "results";
+	public static final String receiverKey = "receiver";
+	public static final String commandKey = "command";
+	public static final String listDocs = "listdocs" ;
+	public static final String docDetails = "docdetails" ;
+	public static final String docIdKey = "docid" ;
  
 	public QueryCaptricityAPI() {
 		super("QueryCaptricityAPI");
@@ -32,66 +38,67 @@ public class QueryCaptricityAPI extends IntentService {
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
-		Log.i("LDA", "IN QUERY");
-		 final ResultReceiver receiver = intent.getParcelableExtra("receiver");
-	        String command = intent.getStringExtra("command");
-	        Bundle b = new Bundle();
-	        if (command.equals("query")) {
-	            receiver.send(RUNNING, Bundle.EMPTY);
-	            try {
-	            	ArrayList<DocumentData> results = getDocumentDataList();
-	            	b.putParcelableArrayList("results", results);
-	                receiver.send(FINISHED, b);
-	            } catch(Exception e) {
-	                b.putString(Intent.EXTRA_TEXT, e.toString());
-	                receiver.send(ERROR, b);
-	            }    
-	        } else if (command.equals("doc_query")) {
-	            receiver.send(RUNNING, Bundle.EMPTY);
-	        	int doc_id = intent.getIntExtra("document_id", 0);
-	        	JSONObject details = getDocumentDetails(doc_id);
-	        	b.putParcelable("results", new DocumentData(details));
-	        	receiver.send(FINISHED, b);
-	        }
-	        this.stopSelf();
+		final ResultReceiver receiver = intent.getParcelableExtra(receiverKey);
+		String command = intent.getStringExtra(commandKey);
+		Bundle b = new Bundle();
+		if (command.equals(listDocs)) {
+			receiver.send(RUNNING, Bundle.EMPTY);
+			try {
+				ArrayList<DocumentData> results = getDocumentDataList();
+				b.putParcelableArrayList(resultKey, results);
+				receiver.send(FINISHED, b);
+			} catch(Exception e) {
+				b.putString(Intent.EXTRA_TEXT, e.toString());
+				receiver.send(ERROR, b);
+			}    
+		} else if (command.equals(docDetails)) {
+			receiver.send(RUNNING, Bundle.EMPTY);
+			int doc_id = intent.getIntExtra(docIdKey, 0);
+			DocumentData doc = getDocumentDetails(doc_id);
+			b.putParcelable(resultKey, doc);
+			receiver.send(FINISHED, b);
+		}
+		this.stopSelf();
 	}
-	
-    private ArrayList<String> getJobNamesList() {
-    	ArrayList<String> job_names = new ArrayList<String>();
-     	JSONArray job_list = getJSONArrayFromURL("shreddr/job/");
+
+	/* http://blog.sptechnolab.com/2011/03/09/android/android-upload-image-to-server/ */
+    private ArrayList<JobData> getJobDataList() {
+    	ArrayList<JobData> jobs = new ArrayList<JobData>();
+    	JSONArray job_list = getJSONArrayFromURL("shreddr/job/");
     	for (int i = 0; i < job_list.length(); i++) {
 			try {
-				JSONObject document = job_list.getJSONObject(i);
-				String name = document.getString("name");
-				job_names.add(name);
+				JSONObject json_job = job_list.getJSONObject(i);
+				jobs.add(new JobData(json_job));
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
     	}
-    	return job_names;
-    	
+    	return jobs;
     }
+    
 	
 	/* http://blog.sptechnolab.com/2011/03/09/android/android-upload-image-to-server/ */
     private ArrayList<DocumentData> getDocumentDataList() {
-    	ArrayList<DocumentData> document_names = new ArrayList<DocumentData>();
+    	ArrayList<DocumentData> documents = new ArrayList<DocumentData>();
     	JSONArray document_list = getJSONArrayFromURL("shreddr/document/");
     	for (int i = 0; i < document_list.length(); i++) {
 			try {
-				JSONObject document = document_list.getJSONObject(i);
-				String name = document.getString("name");
-				int id = document.getInt("id");
-				document_names.add(new DocumentData(name, id));
+				JSONObject json_document = document_list.getJSONObject(i);
+				documents.add(new DocumentData(json_document));
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
     	}
-    	return document_names;
+    	return documents;
     }
     
-    private JSONObject getDocumentDetails(int doc_id) {
+    private DocumentData getDocumentDetails(int doc_id) {
     	String url = "shreddr/document/" + Integer.toString(doc_id);
-		return getJSONObjectFromURL(url);
+		JSONObject json_doc = getJSONObjectFromURL(url);
+		DocumentData doc = new DocumentData(json_doc);
+		ArrayList<JobData> all_jobs = getJobDataList();
+		doc.filterJobs(all_jobs);
+		return doc;
     }
     
     private ArrayList<JSONObject> getJobList() {
