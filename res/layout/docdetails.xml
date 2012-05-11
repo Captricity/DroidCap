@@ -227,7 +227,7 @@
                 android:id="@+id/add_images_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Add Images" />
+                android:text="Take Photo of Instance" />
 			   
         </TableRow>       
         

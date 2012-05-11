@@ -1,5 +1,7 @@
 package com.example.whiskeydroid;
 
+import java.util.Comparator;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -32,6 +34,10 @@ public class JobData implements Parcelable {
 		} else {
 			return 0;
 		}
+	}
+
+	public boolean canAcceptNewIsets() {
+		return status.equals("setup");
 	}
 
 	public int describeContents() {

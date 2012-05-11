@@ -1,19 +1,32 @@
 package com.example.whiskeydroid;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class DocumentDetailsActivity extends Activity implements CaptricityResultReceiver.Receiver {
 	public static final String document_data_key = "document_data";
+	private static String path_to_photo;
 	public CaptricityResultReceiver mReceiver;
+	private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
+	private DocumentData document;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -21,33 +34,41 @@ public class DocumentDetailsActivity extends Activity implements CaptricityResul
 		mReceiver.setReceiver(this);
 		super.onCreate(savedInstanceState);
     	setContentView(R.layout.docdetails);
-    	addImagesButton();
-    	launchJobButton();
-    	Bundle extras = getIntent().getExtras();
-    	DocumentData data = null;
-    	if (extras != null) {
-    		data = extras.getParcelable(document_data_key);
+    	createTakePhotoButton();
+    	createLaunchJobButton();
+    	setDocument();
+    	getDocumentDetailsFromServer();
+	}
+	
+	private void setDocument() {
+     	Bundle extras = getIntent().getExtras();
+    	if (extras == null) {
+    		document = null;
     	}
-    	Log.w("DDA", "got details with doc id " + data.getId());
-    	
+    	document = extras.getParcelable(document_data_key);	
+    }
+	
+    private void getDocumentDetailsFromServer() {
+    	if (document == null) {
+    		return;
+    	}
     	final Intent intent = new Intent(Intent.ACTION_SYNC, null, this, QueryCaptricityAPI.class);
 	    intent.putExtra(QueryCaptricityAPI.receiverKey, mReceiver);
 	    intent.putExtra(QueryCaptricityAPI.commandKey, QueryCaptricityAPI.docDetails);
-	    intent.putExtra(QueryCaptricityAPI.docIdKey, data.getId());
-	    startService(intent);
-	}
+	    intent.putExtra(QueryCaptricityAPI.docIdKey, document.getId());
+	    startService(intent);   	
+    }
 	
-	private void addImagesButton() {
+	private void createTakePhotoButton() {
     	Button add_images_button = (Button) findViewById(R.id.add_images_button);
     	add_images_button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-            	Intent addImagesIntent = new Intent(v.getContext(), AddImagesActivity.class);
-            	startActivity(addImagesIntent);
+            	takePhoto();
             }
         });
      }
 	
-	private void launchJobButton() {
+	private void createLaunchJobButton() {
     	Button launch_job_button = (Button) findViewById(R.id.launch_job_button);
     	launch_job_button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -67,14 +88,87 @@ public class DocumentDetailsActivity extends Activity implements CaptricityResul
 		((TextView) findViewById(R.id.text_is_frozen)).setText(Boolean.toString(doc.getIsFrozen()));
 		((TextView) findViewById(R.id.text_job_count)).setText(Integer.toString(doc.getJobCount()));
 		((TextView) findViewById(R.id.text_pending_isets)).setText(Integer.toString(doc.getPendingISets()));
-		
 	}
 
 	public void onReceiveResult(int resultCode, Bundle resultData) {
-		if (resultCode == QueryCaptricityAPI.FINISHED) {
+		if (resultCode == QueryCaptricityAPI.DOC_DATA_FINISHED) {
 			DocumentData doc = resultData.getParcelable(QueryCaptricityAPI.resultKey);
 			updateDocumentDisplay(doc);
+			this.document = doc;
+		} else if (resultCode == QueryCaptricityAPI.INSTANCE_POST_FINISHED) {
+			getDocumentDetailsFromServer();
 		}
 	}
+	
+	private void showUnsupportedDocumentAlert() {
+		new AlertDialog.Builder(this).setMessage(
+					"Adding instances to documents with " + Integer.toString(document.getSheetCount()) + " pages is not supported yet!")
+    		.setTitle("Instance Add Failed")  
+    		.setCancelable(true)  
+    		.setNeutralButton(android.R.string.ok,  
+    				new DialogInterface.OnClickListener() {  
+    					public void onClick(DialogInterface dialog, int whichButton){
+    						dialog.dismiss();
+    					}  
+    				})  
+    		.show();
+	}
 
+    private void takePhoto() {
+    	if (document.getSheetCount() != 1) {
+    		showUnsupportedDocumentAlert();
+    		return;
+    	}
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        Uri fileUri = getOutputMediaFileUri();
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+        startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);            
+     }
+    
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
+        	postImageToServer();
+        }
+    }
+    
+    private void postImageToServer() {
+    	if (document == null) {
+    		return;
+    	}
+    	final Intent intent = new Intent(Intent.ACTION_SYNC, null, this, QueryCaptricityAPI.class);
+	    intent.putExtra(QueryCaptricityAPI.receiverKey, mReceiver);
+	    intent.putExtra(QueryCaptricityAPI.commandKey, QueryCaptricityAPI.postPhoto);
+	    //TODO: may need to create a new job?
+	    intent.putExtra(QueryCaptricityAPI.jobIdKey, document.getJobIdToPostTo());
+	    intent.putExtra(QueryCaptricityAPI.photoPathKey, path_to_photo);
+	    startService(intent);   	
+    }
+    
+	private static Uri getOutputMediaFileUri() {
+		File output = getOutputMediaFile();
+	    path_to_photo = output.getAbsolutePath(); 
+	    return Uri.fromFile(output);
+	}
+
+	private static File getOutputMediaFile() {
+	    File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
+	              Environment.DIRECTORY_PICTURES), "WhiskeyDroid");
+	    if (! mediaStorageDir.exists()){
+	        if (! mediaStorageDir.mkdirs()){
+	            return null;
+	        }
+	    }
+	    String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+	    File mediaFile = new File(mediaStorageDir.getPath() + File.separator + "IMG_"+ timeStamp + ".jpg");
+	    try {
+	    	mediaFile.createNewFile();
+		} catch (IOException e) {
+			mediaFile = null;
+			e.printStackTrace();
+		}
+	    return mediaFile;
+	}
+	
+	
 }

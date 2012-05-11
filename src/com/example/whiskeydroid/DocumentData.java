@@ -1,6 +1,8 @@
 package com.example.whiskeydroid;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.json.JSONException;
@@ -155,5 +157,20 @@ public class DocumentData implements Parcelable {
 					public DocumentData[] newArray(int size) {
 						return new DocumentData[size];
 					}
-	 }; 
+	 };
+
+	public int getJobIdToPostTo() {
+		//Get lowest id job in 'setup' status
+		Collections.sort(jobs, new Comparator<JobData>(){
+			public int compare(JobData rhs, JobData lhs) {
+				return rhs.getId() - lhs.getId();
+			}
+		});
+		for (JobData job:jobs) {
+			if (job.canAcceptNewIsets()) {
+				return job.getId();
+			}
+		}
+		return 0;
+	} 
 }
