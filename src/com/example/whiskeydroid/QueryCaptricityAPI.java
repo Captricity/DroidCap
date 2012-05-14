@@ -3,8 +3,9 @@ package com.example.whiskeydroid;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
-import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.ResponseHandler;
@@ -143,6 +144,11 @@ public class QueryCaptricityAPI extends IntentService {
 				e.printStackTrace();
 			}
     	}
+    	Collections.sort(documents, new Comparator<DocumentData>(){
+			public int compare(DocumentData rhs, DocumentData lhs) {
+				return -1*(rhs.getId() - lhs.getId());
+			}
+		});    	
     	return documents;
     }
     
@@ -154,12 +160,7 @@ public class QueryCaptricityAPI extends IntentService {
 		doc.filterJobs(all_jobs);
 		return doc;
     }
-    
-    private ArrayList<JSONObject> getJobList() {
-    	ArrayList<JSONObject> jobs = new ArrayList<JSONObject>();
-    	return jobs;
-    }
-    
+   
     private JSONObject getJSONObjectFromURL(String url) {
      	String response = getDataFromURL(url);
     	try {

@@ -10,6 +10,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -26,6 +27,7 @@ public class DocumentDetailsActivity extends Activity implements CaptricityResul
 	private static String path_to_photo;
 	public CaptricityResultReceiver mReceiver;
 	private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
+    private static final int PICK_PHOTO = 213;
 	private DocumentData document;
 	
 	@Override
@@ -35,6 +37,7 @@ public class DocumentDetailsActivity extends Activity implements CaptricityResul
 		super.onCreate(savedInstanceState);
     	setContentView(R.layout.docdetails);
     	createTakePhotoButton();
+    	createPickPhotoButton();
     	createLaunchJobButton();
     	setDocument();
     	getDocumentDetailsFromServer();
@@ -66,7 +69,16 @@ public class DocumentDetailsActivity extends Activity implements CaptricityResul
             	takePhoto();
             }
         });
-     }
+    }
+	
+	private void createPickPhotoButton() {
+    	Button pick_images_button = (Button) findViewById(R.id.pick_images_button);
+    	pick_images_button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+            	pickImage();
+            }
+        });
+    }
 	
 	private void createLaunchJobButton() {
     	Button launch_job_button = (Button) findViewById(R.id.launch_job_button);
@@ -113,22 +125,51 @@ public class DocumentDetailsActivity extends Activity implements CaptricityResul
     				})  
     		.show();
 	}
+	
+	private boolean canUploadPhotoToDocument() {
+	    if (document.getSheetCount() != 1) {
+    		return false;
+    	}	
+	    return true;
+	}
 
     private void takePhoto() {
-    	if (document.getSheetCount() != 1) {
+    	if (! canUploadPhotoToDocument()) {
     		showUnsupportedDocumentAlert();
     		return;
     	}
+
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         Uri fileUri = getOutputMediaFileUri();
         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
         startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);            
      }
     
+    
+     private void pickImage() {
+    	if (! canUploadPhotoToDocument()) {
+    		showUnsupportedDocumentAlert();
+    		return;
+    	}
+        Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(intent, PICK_PHOTO);            
+     }
+    
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
         	postImageToServer();
+        } else if (requestCode == PICK_PHOTO && resultCode == RESULT_OK) {
+            Uri selectedImage = data.getData();
+            String[] filePathColumn = {MediaStore.Images.Media.DATA};
+
+            Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
+            cursor.moveToFirst();
+
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            path_to_photo = cursor.getString(columnIndex);
+            cursor.close();
+            postImageToServer();
         }
     }
     
