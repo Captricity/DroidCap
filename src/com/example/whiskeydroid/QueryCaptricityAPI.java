@@ -2,13 +2,17 @@ package com.example.whiskeydroid;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
+import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
@@ -16,6 +20,7 @@ import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -85,7 +90,17 @@ public class QueryCaptricityAPI extends IntentService {
 	}
     
 	private void launchJob(int jobId) {
-		//TODO: implement
+    	String url = "shreddr/job/" + Integer.toString(jobId);
+    	HttpPost apiPost = createAPIPost(url);
+    	List<NameValuePair> requestParams = new ArrayList<NameValuePair>(1);
+    	requestParams.add(new BasicNameValuePair("submit_job_action", "true"));
+    	try {
+			apiPost.setEntity(new UrlEncodedFormEntity(requestParams));
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+			return;
+		}
+    	executeAPICall(apiPost);
 	}
  
 	/* http://stackoverflow.com/questions/2935946/sending-images-using-http-post */
@@ -121,8 +136,6 @@ public class QueryCaptricityAPI extends IntentService {
     	}
     	*/
     }
-
-	
 
 	/* http://blog.sptechnolab.com/2011/03/09/android/android-upload-image-to-server/ */
     private ArrayList<JobData> getJobDataList() {
