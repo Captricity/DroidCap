@@ -1,14 +1,20 @@
 package com.example.whiskeydroid;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.StatusLine;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.ResponseHandler;
@@ -28,6 +34,7 @@ import org.json.JSONObject;
 import android.app.IntentService;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.ResultReceiver;
 import android.util.Log;
 
@@ -37,6 +44,7 @@ public class QueryCaptricityAPI extends IntentService {
 	public static final int DOC_DATA_FINISHED = 3;	
 	public static final int INSTANCE_POST_FINISHED = 4;	
 	public static final int JOB_LAUNCHED = 5;	
+	public static final int SHRED_RECEIVED = 6;	
 	public static final String api_base_url = "https://nightly.captricity.com/api/";
 	public static final String api_user_agent = "nick-android-app-v0-0.1";
 	public static final String api_auth_token = "db5fa1b05d17441191a921c390d5d34c";
@@ -48,9 +56,12 @@ public class QueryCaptricityAPI extends IntentService {
 	public static final String docDetailsCommand = "docdetails" ;
 	public static final String postPhotoCommand = "postphoto" ;
 	public static final String launchJobCommand = "joblaunch" ;
+	public static final String getShredImageCommand = "getshredimage" ;
 	public static final String docIdKey = "docid" ;
  	public static final String jobIdKey = "jobid";
+ 	public static final String shredIdKey = "shredid";
 	public static final String photoPathKey = "photopath";
+	public static final String shredImagePathKey = "shredimagepath";
 	
 	public QueryCaptricityAPI() {
 		super("QueryCaptricityAPI");
@@ -85,8 +96,33 @@ public class QueryCaptricityAPI extends IntentService {
 			int jobId = intent.getIntExtra(jobIdKey, 0);
 			launchJob(jobId);
 			receiver.send(JOB_LAUNCHED, b);
+		} else if (command.equals(getShredImageCommand)) {
+			int shredId = intent.getIntExtra(shredIdKey, 0);
+			String file_path = getShredImage(shredId);
+			b.putString(shredImagePathKey, file_path);
+			receiver.send(SHRED_RECEIVED, b);
 		}
 		this.stopSelf();
+	}
+	
+	private String getShredImage(int shredId) {
+		try {
+			String url = "shreddr/shred/" + Integer.toString(shredId) + "/image";
+			HttpGet shred_get = createAPIGet(url);
+            File file = getMediaFile();
+            FileOutputStream fos = new FileOutputStream(file);
+            HttpClient httpclient = new DefaultHttpClient();
+            HttpResponse result = httpclient.execute(shred_get);
+            StatusLine s = result.getStatusLine();
+            Log.w("SHRED GET STATUS CODE", Integer.toString(s.getStatusCode()));
+            HttpEntity result_entity = result.getEntity();
+            result_entity.writeTo(fos);
+            fos.close();
+            return file.getAbsolutePath();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return "";
 	}
     
 	private void launchJob(int jobId) {
@@ -237,5 +273,23 @@ public class QueryCaptricityAPI extends IntentService {
     	request.addHeader("X_API_TOKEN", api_auth_token);
     	request.addHeader("X_API_VERSION", api_version);		
  	}
-	
+ 	
+ 	public static File getMediaFile() {
+	    File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
+	              Environment.DIRECTORY_PICTURES), "WhiskeyDroid");
+	    if (! mediaStorageDir.exists()){
+	        if (! mediaStorageDir.mkdirs()){
+	            return null;
+	        }
+	    }
+	    String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+	    File mediaFile = new File(mediaStorageDir.getPath() + File.separator + "IMG_"+ timeStamp + ".png");
+	    try {
+	    	mediaFile.createNewFile();
+		} catch (IOException e) {
+			mediaFile = null;
+			e.printStackTrace();
+		}
+	    return mediaFile;
+	}
 }

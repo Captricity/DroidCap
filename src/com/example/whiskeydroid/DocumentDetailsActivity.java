@@ -39,6 +39,7 @@ public class DocumentDetailsActivity extends Activity implements CaptricityResul
     	createTakePhotoButton();
     	createPickPhotoButton();
     	createLaunchJobButton();
+    	createSpotCheckButton();
     	setDocument();
     	getDocumentDetailsFromServer();
 	}
@@ -88,6 +89,21 @@ public class DocumentDetailsActivity extends Activity implements CaptricityResul
             }
         });
      }
+	
+	private void createSpotCheckButton() {
+    	Button spot_check_button = (Button) findViewById(R.id.spot_check_button);
+    	spot_check_button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+            	startResultsSpotCheck(v);
+            }
+        });
+    }
+	
+    private void startResultsSpotCheck(View v) {
+ 		Intent spotCheckIntent = new Intent(v.getContext(), SpotCheckActivity.class);
+		spotCheckIntent.putExtra(document_data_key, document);
+        startActivity(spotCheckIntent);
+    }
 	
 	private void updateDocumentDisplay(DocumentData doc) {
 		((TextView) findViewById(R.id.text_name)).setText(doc.getName());
@@ -200,29 +216,10 @@ public class DocumentDetailsActivity extends Activity implements CaptricityResul
  
     
 	private static Uri getOutputMediaFileUri() {
-		File output = getOutputMediaFile();
+		File output = QueryCaptricityAPI.getMediaFile();
 	    path_to_photo = output.getAbsolutePath(); 
 	    return Uri.fromFile(output);
 	}
 
-	private static File getOutputMediaFile() {
-	    File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
-	              Environment.DIRECTORY_PICTURES), "WhiskeyDroid");
-	    if (! mediaStorageDir.exists()){
-	        if (! mediaStorageDir.mkdirs()){
-	            return null;
-	        }
-	    }
-	    String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-	    File mediaFile = new File(mediaStorageDir.getPath() + File.separator + "IMG_"+ timeStamp + ".jpg");
-	    try {
-	    	mediaFile.createNewFile();
-		} catch (IOException e) {
-			mediaFile = null;
-			e.printStackTrace();
-		}
-	    return mediaFile;
-	}
-	
-	
+
 }

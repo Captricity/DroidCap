@@ -10,6 +10,7 @@ import org.json.JSONObject;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 public class DocumentData implements Parcelable {
 	private String name;
@@ -47,18 +48,6 @@ public class DocumentData implements Parcelable {
 		}
 	}
 	
-	private DocumentData(Parcel in) {
-		this();
-		name = in.readString();
-		id = in.readInt();
-		sheet_count = in.readInt();
-		conversion_status = in.readString();
-		is_frozen = in.readByte() == 1;
-		created = in.readString();
-		modified = in.readString();
-		in.readTypedList(jobs, JobData.CREATOR);
-	}
-	
 	public int getId() {
 		return id;
 	}
@@ -85,10 +74,22 @@ public class DocumentData implements Parcelable {
 		dest.writeByte((byte) (is_frozen ? 1 : 0));
 		dest.writeString(created);
 		dest.writeString(modified);
-		dest.writeList(jobs);
+		dest.writeTypedList(jobs);
 	}
 	
-	 public int getSheetCount() {
+	private DocumentData(Parcel in) {
+		this();
+		name = in.readString();
+		id = in.readInt();
+		sheet_count = in.readInt();
+		conversion_status = in.readString();
+		is_frozen = in.readByte() == 1;
+		created = in.readString();
+		modified = in.readString();
+		in.readTypedList(jobs, JobData.CREATOR);
+	}
+	
+	public int getSheetCount() {
 		return sheet_count;
 	}
 	
@@ -138,6 +139,16 @@ public class DocumentData implements Parcelable {
 	
 	public int getJobCount() {
 		return this.jobs.size();
+	}
+	
+	public int getCompletedJobCount() {
+		int completed_jobs = 0;
+		for (JobData job:jobs) {
+			if (job.getStatus().equals("completed")) {
+				completed_jobs++;
+			}
+		}
+		return completed_jobs;
 	}
 	
 	public int getPendingISets() {

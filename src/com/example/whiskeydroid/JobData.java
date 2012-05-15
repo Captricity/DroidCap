@@ -7,6 +7,7 @@ import org.json.JSONObject;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 public class JobData implements Parcelable {
 	private String status;
@@ -34,6 +35,16 @@ public class JobData implements Parcelable {
 		} else {
 			return 0;
 		}
+	}
+	
+	public void debugPrint(String desc) {
+		Log.w("JOBDATA debug print", desc);
+		Log.w("JOBDATA-status", status);
+		Log.w("JOBDATA-name", name);
+		Log.w("JOBDATA-id", Integer.toString(id)); 
+		Log.w("JOBDATA-isets", Integer.toString(instance_set_count)); 
+		Log.w("JOBDATA-doc_id", Integer.toString(document_id)); 
+		Log.w("JOBDATA", "Done");
 	}
 
 	public boolean canAcceptNewIsets() {
