@@ -108,6 +108,8 @@ public class DocumentDetailsActivity extends Activity implements CaptricityResul
 			this.document = doc;
 		} else if (resultCode == QueryCaptricityAPI.INSTANCE_POST_FINISHED) {
 			getDocumentDetailsFromServer();
+		} else if (resultCode == QueryCaptricityAPI.JOB_LAUNCHED) {
+			getDocumentDetailsFromServer();
 		}
 	}
 	

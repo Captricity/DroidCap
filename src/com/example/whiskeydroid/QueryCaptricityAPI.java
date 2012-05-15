@@ -31,6 +31,7 @@ public class QueryCaptricityAPI extends IntentService {
 	public static final int ERROR = 2;	
 	public static final int DOC_DATA_FINISHED = 3;	
 	public static final int INSTANCE_POST_FINISHED = 4;	
+	public static final int JOB_LAUNCHED = 5;	
 	public static final String api_base_url = "https://nightly.captricity.com/api/";
 	public static final String api_user_agent = "nick-android-app-v0-0.1";
 	public static final String api_auth_token = "db5fa1b05d17441191a921c390d5d34c";
@@ -78,6 +79,7 @@ public class QueryCaptricityAPI extends IntentService {
 		} else if (command.equals(launchJobCommand)) {
 			int jobId = intent.getIntExtra(jobIdKey, 0);
 			launchJob(jobId);
+			receiver.send(JOB_LAUNCHED, b);
 		}
 		this.stopSelf();
 	}
