@@ -57,7 +57,7 @@ public class DocumentDetailsActivity extends Activity implements CaptricityResul
     	}
     	final Intent intent = new Intent(Intent.ACTION_SYNC, null, this, QueryCaptricityAPI.class);
 	    intent.putExtra(QueryCaptricityAPI.receiverKey, mReceiver);
-	    intent.putExtra(QueryCaptricityAPI.commandKey, QueryCaptricityAPI.docDetails);
+	    intent.putExtra(QueryCaptricityAPI.commandKey, QueryCaptricityAPI.docDetailsCommand);
 	    intent.putExtra(QueryCaptricityAPI.docIdKey, document.getId());
 	    startService(intent);   	
     }
@@ -84,8 +84,7 @@ public class DocumentDetailsActivity extends Activity implements CaptricityResul
     	Button launch_job_button = (Button) findViewById(R.id.launch_job_button);
     	launch_job_button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-            	Intent launchJobIntent = new Intent(v.getContext(), LaunchJobActivity.class);
-            	startActivity(launchJobIntent);
+            	launchJob();
             }
         });
      }
@@ -179,12 +178,24 @@ public class DocumentDetailsActivity extends Activity implements CaptricityResul
     	}
     	final Intent intent = new Intent(Intent.ACTION_SYNC, null, this, QueryCaptricityAPI.class);
 	    intent.putExtra(QueryCaptricityAPI.receiverKey, mReceiver);
-	    intent.putExtra(QueryCaptricityAPI.commandKey, QueryCaptricityAPI.postPhoto);
+	    intent.putExtra(QueryCaptricityAPI.commandKey, QueryCaptricityAPI.postPhotoCommand);
 	    //TODO: may need to create a new job?
 	    intent.putExtra(QueryCaptricityAPI.jobIdKey, document.getJobIdToPostTo());
 	    intent.putExtra(QueryCaptricityAPI.photoPathKey, path_to_photo);
 	    startService(intent);   	
     }
+    
+    private void launchJob() {
+    	if (document == null) {
+    		return;
+    	}
+    	final Intent intent = new Intent(Intent.ACTION_SYNC, null, this, QueryCaptricityAPI.class);
+	    intent.putExtra(QueryCaptricityAPI.receiverKey, mReceiver);
+	    intent.putExtra(QueryCaptricityAPI.commandKey, QueryCaptricityAPI.launchJobCommand);
+	    intent.putExtra(QueryCaptricityAPI.jobIdKey, document.getJobIdToPostTo());
+	    startService(intent);   	
+    }
+ 
     
 	private static Uri getOutputMediaFileUri() {
 		File output = getOutputMediaFile();

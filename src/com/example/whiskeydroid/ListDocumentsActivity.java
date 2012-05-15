@@ -32,7 +32,7 @@ public class ListDocumentsActivity extends ListActivity implements CaptricityRes
 		setListAdapter(adapter);
 	    final Intent intent = new Intent(Intent.ACTION_SYNC, null, this, QueryCaptricityAPI.class);
 	    intent.putExtra(QueryCaptricityAPI.receiverKey, mReceiver);
-	    intent.putExtra(QueryCaptricityAPI.commandKey, QueryCaptricityAPI.listDocs);
+	    intent.putExtra(QueryCaptricityAPI.commandKey, QueryCaptricityAPI.listDocsCommand);
 	    startService(intent);
 	}
 	

@@ -27,7 +27,6 @@ import android.os.ResultReceiver;
 import android.util.Log;
 
 public class QueryCaptricityAPI extends IntentService {
-	public static final int RUNNING = 0;
 	public static final int FINISHED = 1;
 	public static final int ERROR = 2;	
 	public static final int DOC_DATA_FINISHED = 3;	
@@ -39,9 +38,10 @@ public class QueryCaptricityAPI extends IntentService {
 	public static final String resultKey = "results";
 	public static final String receiverKey = "receiver";
 	public static final String commandKey = "command";
-	public static final String listDocs = "listdocs" ;
-	public static final String docDetails = "docdetails" ;
-	public static final String postPhoto = "postphoto" ;
+	public static final String listDocsCommand = "listdocs" ;
+	public static final String docDetailsCommand = "docdetails" ;
+	public static final String postPhotoCommand = "postphoto" ;
+	public static final String launchJobCommand = "joblaunch" ;
 	public static final String docIdKey = "docid" ;
  	public static final String jobIdKey = "jobid";
 	public static final String photoPathKey = "photopath";
@@ -55,8 +55,7 @@ public class QueryCaptricityAPI extends IntentService {
 		final ResultReceiver receiver = intent.getParcelableExtra(receiverKey);
 		String command = intent.getStringExtra(commandKey);
 		Bundle b = new Bundle();
-		if (command.equals(listDocs)) {
-			receiver.send(RUNNING, Bundle.EMPTY);
+		if (command.equals(listDocsCommand)) {
 			try {
 				ArrayList<DocumentData> results = getDocumentDataList();
 				b.putParcelableArrayList(resultKey, results);
@@ -65,22 +64,28 @@ public class QueryCaptricityAPI extends IntentService {
 				b.putString(Intent.EXTRA_TEXT, e.toString());
 				receiver.send(ERROR, b);
 			}    
-		} else if (command.equals(docDetails)) {
-			receiver.send(RUNNING, Bundle.EMPTY);
+		} else if (command.equals(docDetailsCommand)) {
 			int doc_id = intent.getIntExtra(docIdKey, 0);
 			DocumentData doc = getDocumentDetails(doc_id);
 			b.putParcelable(resultKey, doc);
 			receiver.send(DOC_DATA_FINISHED, b);
-		} else if (command.equals(postPhoto)) {
-			int job_id = intent.getIntExtra(jobIdKey, 0);
+		} else if (command.equals(postPhotoCommand)) {
+			int jobId = intent.getIntExtra(jobIdKey, 0);
 			String path_to_photo = intent.getStringExtra(photoPathKey);
-			String result = postImageToServer(job_id, path_to_photo);
+			String result = postImageToServer(jobId, path_to_photo);
 			Log.w("NICK", result);
 			receiver.send(INSTANCE_POST_FINISHED, b);
+		} else if (command.equals(launchJobCommand)) {
+			int jobId = intent.getIntExtra(jobIdKey, 0);
+			launchJob(jobId);
 		}
 		this.stopSelf();
 	}
-
+    
+	private void launchJob(int jobId) {
+		//TODO: implement
+	}
+ 
 	/* http://stackoverflow.com/questions/2935946/sending-images-using-http-post */
     private String postImageToServer(int job_id, String path_to_photo) {
     	String url = "shreddr/job/" + Integer.toString(job_id);
