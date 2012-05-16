@@ -4,24 +4,18 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" >
+        		
+    <ImageView android:id="@+id/shred_view" 
+    	android:layout_width="wrap_content" 
+    	android:layout_height="wrap_content"
+    	android:scaleType="fitCenter"
+    	android:adjustViewBounds="true" />
+ 
      <TableLayout
         android:id="@+id/tableLayout1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
-		<TableRow
-            android:id="@+id/tableRow1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
-            
-    		<ImageView android:id="@+id/shred_view" 
-    			android:layout_width="fill_parent" 
-    			android:layout_height="wrap_content"
-    			android:scaleType="fitCenter"
-    			android:adjustViewBounds="true" />
-   		
-        </TableRow>
-        
         <TableRow
             android:id="@+id/tableRow2"
             android:layout_width="wrap_content"
