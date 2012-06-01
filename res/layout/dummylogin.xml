@@ -1,42 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/LinearLayout1"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:background="@color/white"
-    android:orientation="vertical" >
-
-    <TextView
-        android:id="@+id/blank1"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:text=" "
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    <ImageView
-        android:id="@+id/imageView1"
-        android:layout_width="272dp"
-        android:layout_height="156dp"
-        android:layout_gravity="center_horizontal"
-        android:src="@drawable/bigolc" />
-
-    <TextView
-        android:id="@+id/blanktext"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:text=" "
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-    
-    <Button
-        android:id="@+id/button1"
-        android:layout_width="273dp"
-        android:layout_height="50dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_weight="0.00"
-        android:background="@layout/buttonshape"
-        android:textSize="20dp"
-        android:textColor="#FFFFFF"
-        android:textStyle="bold"
-        android:text="Sign in" />
-
-</LinearLayout>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:id="@+id/container"
+android:layout_width="fill_parent"
+android:layout_height="fill_parent">
+<include android:id="@+id/dsl" layout="@layout/darkside_layout" />
+<include android:id="@+id/ll" layout="@layout/login_layout" />
+</FrameLayout>
