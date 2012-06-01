@@ -10,5 +10,5 @@
     <string name="takepicture2">Take Picture</string>
     <string name="listdocs">List Documents</string>
     <string name="photoalttext">Photo Preview</string>
-
+	<color name="white">#FFFFFF</color>
 </resources>

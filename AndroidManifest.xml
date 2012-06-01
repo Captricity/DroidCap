@@ -15,16 +15,18 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name" >
         <activity android:name="ListDocumentsActivity" android:label="Choose Template to Upload to">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
         </activity>
         <service android:name="QueryCaptricityAPI"></service>
         <activity android:name="DocumentDetailsActivity" android:label="Template Details"></activity>
         <activity android:name="AddImagesActivity"></activity>
         <activity android:name="LaunchJobActivity"></activity>
         <activity android:name="SpotCheckActivity" android:label="Spot Check Results"></activity>
+        <activity android:name="DummyLoginActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
