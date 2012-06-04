@@ -20,16 +20,20 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/textView1"
+        android:paddingTop="20dip"
+        android:paddingBottom="20dip"
         android:background="#e0e4eb" >
 
         <TextView
             android:id="@+id/job_details_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/lin1"
             android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
+            android:layout_alignRight="@+id/lin1"
             android:text="Job 1"
-            android:textColor="#000000"
+            android:textColor="#778AB5"
+            android:background="#FFFFFF"
             android:textSize="32dp"
             android:textStyle="bold" />
 
@@ -37,7 +41,9 @@
             android:id="@+id/lin1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
+            android:layout_alignLeft="@+id/lin2"
+            android:layout_alignRight="@+id/lin2"
+            android:background="#FFFFFF"
             android:layout_below="@+id/job_details_name"
             android:orientation="horizontal" >
 
@@ -47,25 +53,24 @@
                 android:layout_height="wrap_content"
                 android:text="Template"
                 android:textColor="#000000"
-                android:textSize="32dp"
-                android:textStyle="bold" />
-            
-              <TextView
-                android:id="@+id/bla"
+                android:textSize="24dp"/>
+
+            <TextView
+                android:id="@+id/template_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="1"
                 android:textColor="#000000"
-                android:textSize="32dp"
-                android:textStyle="bold" />
+                android:textSize="24dp"/>
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/lin2"
-            android:layout_width="wrap_content"
+            android:layout_width="300dip"
             android:layout_height="wrap_content"
+            android:background="#FFFFFF"
             android:layout_below="@+id/lin1"
-            android:layout_centerInParent="true"
+            android:layout_centerHorizontal="true"
             android:orientation="horizontal" >
 
             <TextView
@@ -76,16 +81,25 @@
                 android:layout_centerHorizontal="true"
                 android:text="Template Pages"
                 android:textColor="#000000"
-                android:textSize="32dp"
-                android:textStyle="bold" />
+                android:textSize="24dp"/>
+
+            <TextView
+                android:id="@+id/template_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="22"
+                android:textColor="#000000"
+                android:textSize="24dip"/>
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/lin3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
+            android:layout_alignLeft="@+id/lin2"
             android:layout_alignRight="@+id/lin2"
+            android:layout_below="@+id/lin2"
+            android:background="#FFFFFF"
             android:orientation="horizontal" >
 
             <TextView
@@ -96,9 +110,9 @@
                 android:layout_centerHorizontal="true"
                 android:text="Forms Scanned"
                 android:textColor="#000000"
-                android:textSize="32dp"
-                android:textStyle="bold" />
+                android:textSize="24dp"/>
         </LinearLayout>
+
     </RelativeLayout>
 
     <RelativeLayout
