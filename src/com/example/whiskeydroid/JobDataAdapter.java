@@ -1,5 +1,8 @@
 package com.example.whiskeydroid;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import android.content.Context;
@@ -39,12 +42,27 @@ public class JobDataAdapter extends ArrayAdapter<JobData> {
 			jobDataView = (LinearLayout) convertView;
 		}
 		//Get the text boxes from the listitem.xml file
-		TextView jobID = (TextView) jobDataView.findViewById(R.id.jobDataID);
 		TextView jobName = (TextView) jobDataView.findViewById(R.id.jobDataName);
+		TextView jobIsetCount = (TextView) jobDataView.findViewById(R.id.jobDataInstanceSetCount);
+		TextView jobDate = (TextView) jobDataView.findViewById(R.id.jobDataDate);
 
 		//Assign the appropriate data from our alert object above
-		jobID.setText(Integer.toString(job_data.getId()));
 		jobName.setText(job_data.getName());
+		int iset_count  = job_data.getInstanceSetCount();
+		if (iset_count == 1) {	
+			jobIsetCount.setText("1 page");
+		} else {
+			jobIsetCount.setText(Integer.toString(iset_count) + " page");
+		}
+		//"created": "2012-05-29T13:08:37.029",
+		SimpleDateFormat fin = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+		try {
+			Date creation = fin.parse(job_data.getCreationDate());
+			SimpleDateFormat fout = new SimpleDateFormat("MMMMMMMMMM dd, hh:mm aaa");
+			jobDate.setText(fout.format(creation));
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
 		return jobDataView;
 	}
 

@@ -14,6 +14,7 @@ public class JobData implements Parcelable {
 	private String name;
 	private int id;
 	private int instance_set_count;
+	private String creation_date;
 	private int document_id;
 	
 	public JobData(JSONObject json) {
@@ -22,6 +23,7 @@ public class JobData implements Parcelable {
 			name = json.getString("name");
 			id = json.getInt("id");
 			instance_set_count = json.getInt("instance_set_count");
+			creation_date = json.getString("created");
 			JSONObject document = json.getJSONObject("document");
 			document_id = document.getInt("id");
 		} catch (JSONException e) {
@@ -31,6 +33,10 @@ public class JobData implements Parcelable {
 	
 	public String getName() {
 		return name;
+	}
+	
+	public String getCreationDate() {
+		return creation_date;
 	}
 	
 	public int getPendingISets() {
@@ -80,6 +86,7 @@ public class JobData implements Parcelable {
 		dest.writeString(name);
 		dest.writeInt(id);
 		dest.writeInt(instance_set_count);
+		dest.writeString(creation_date);
 		dest.writeInt(document_id);
 	}
 	
@@ -88,6 +95,7 @@ public class JobData implements Parcelable {
 		name = in.readString();
 		id = in.readInt();
 		instance_set_count = in.readInt();
+		creation_date = in.readString();
 		document_id = in.readInt();
 	}
 	
