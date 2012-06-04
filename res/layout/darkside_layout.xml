@@ -1,22 +1,66 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/dark_side_view"
     android:layout_width="match_parent"
-    android:layout_height="fill_parent"
-    android:gravity="center_horizontal"
+    android:layout_height="match_parent"
+    android:gravity="top"
+    android:background="#6187BA"
     android:orientation="vertical" >
 
-     <ListView android:id="@android:id/list"
-               android:layout_width="match_parent"
-               android:layout_height="match_parent"
-               android:background="#00FF00"
-               android:layout_weight="1"
-               android:drawSelectorOnTop="false"/>
-     
-     <ProgressBar
-         android:id="@android:id/empty"
-         style="?android:attr/progressBarStyleLarge"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:layout_centerInParent="true" />
-     
+    <Button
+        android:id="@+id/new_job"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:text="New Job" />
+
+    <Button
+        android:id="@+id/home"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@+id/new_job"
+        android:text="Home" />
+
+    <Button
+        android:id="@+id/next"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginRight="31dp"
+        android:layout_toLeftOf="@+id/home"
+        android:text="Next" />
+
+    <ListView
+        android:id="@android:id/list"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_above="@+id/home"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/new_job"
+        android:layout_marginBottom="21dp"
+        android:cacheColorHint="#00000000"
+        android:background="#FFFFFF">
+
+    </ListView>
+
+    <ProgressBar
+        android:id="@android:id/empty"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="14dp" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/new_job"
+        android:layout_alignBottom="@+id/new_job"
+        android:layout_centerHorizontal="true"
+        android:textColor="#FFFFFF"
+        android:text="Captricity"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
 </RelativeLayout>
