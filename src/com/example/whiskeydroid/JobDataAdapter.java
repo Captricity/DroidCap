@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -52,8 +53,9 @@ public class JobDataAdapter extends ArrayAdapter<JobData> {
 		if (iset_count == 1) {	
 			jobIsetCount.setText("1 page");
 		} else {
-			jobIsetCount.setText(Integer.toString(iset_count) + " page");
+			jobIsetCount.setText(Integer.toString(iset_count) + " pages");
 		}
+		
 		//"created": "2012-05-29T13:08:37.029",
 		SimpleDateFormat fin = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
 		try {
@@ -63,6 +65,32 @@ public class JobDataAdapter extends ArrayAdapter<JobData> {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
+		
+		ImageView done_icon = (ImageView) jobDataView.findViewById(R.id.done_icon);
+		TextView done_txt = (TextView) jobDataView.findViewById(R.id.done_text);
+		ImageView setup_icon = (ImageView) jobDataView.findViewById(R.id.setup_icon);
+		TextView setup_txt = (TextView) jobDataView.findViewById(R.id.setup_text);
+		ImageView progress_icon = (ImageView) jobDataView.findViewById(R.id.progress_icon);
+		if (job_data.getStatus().equals("completed")) {
+			done_icon.setVisibility(View.VISIBLE);
+			done_txt.setVisibility(View.VISIBLE);
+			setup_icon.setVisibility(View.GONE);
+			setup_txt.setVisibility(View.GONE);
+			progress_icon.setVisibility(View.GONE);
+		} else if (job_data.getStatus().equals("setup")) {
+			done_icon.setVisibility(View.GONE);
+			done_txt.setVisibility(View.GONE);
+			setup_icon.setVisibility(View.VISIBLE);
+			setup_txt.setVisibility(View.VISIBLE);
+			progress_icon.setVisibility(View.GONE);
+		} else {
+			done_icon.setVisibility(View.GONE);
+			done_txt.setVisibility(View.GONE);
+			setup_icon.setVisibility(View.GONE);
+			setup_txt.setVisibility(View.GONE);
+			progress_icon.setVisibility(View.VISIBLE);
+		}
+		
 		return jobDataView;
 	}
 
