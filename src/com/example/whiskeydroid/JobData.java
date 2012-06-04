@@ -14,8 +14,10 @@ public class JobData implements Parcelable {
 	private String name;
 	private int id;
 	private int instance_set_count;
+	private int sheet_count;
 	private String creation_date;
 	private int document_id;
+	private String document_name;
 	
 	public JobData(JSONObject json) {
 		try {
@@ -23,9 +25,11 @@ public class JobData implements Parcelable {
 			name = json.getString("name");
 			id = json.getInt("id");
 			instance_set_count = json.getInt("instance_set_count");
+			sheet_count = json.getInt("sheet_count");
 			creation_date = json.getString("created");
 			JSONObject document = json.getJSONObject("document");
 			document_id = document.getInt("id");
+			document_name = document.getString("name");
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}	
@@ -45,6 +49,10 @@ public class JobData implements Parcelable {
 		} else {
 			return 0;
 		}
+	}
+	
+	public int getSheetCount() {
+		return sheet_count;
 	}
 	
 	public void debugPrint(String desc) {
@@ -80,14 +88,20 @@ public class JobData implements Parcelable {
 	public int getDocumentId() {
 		return document_id;
 	}
+	
+	public String getDocumentName() {
+		return document_name;
+	}
 
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeString(status);
 		dest.writeString(name);
 		dest.writeInt(id);
 		dest.writeInt(instance_set_count);
+		dest.writeInt(sheet_count);
 		dest.writeString(creation_date);
 		dest.writeInt(document_id);
+		dest.writeString(document_name);
 	}
 	
 	private JobData(Parcel in) {
@@ -95,8 +109,10 @@ public class JobData implements Parcelable {
 		name = in.readString();
 		id = in.readInt();
 		instance_set_count = in.readInt();
+		sheet_count = in.readInt();
 		creation_date = in.readString();
 		document_id = in.readInt();
+		document_name = in.readString();
 	}
 	
 	public static final Parcelable.Creator<JobData> CREATOR

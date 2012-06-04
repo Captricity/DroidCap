@@ -16,106 +16,6 @@
         android:textStyle="bold" />
 
     <RelativeLayout
-        android:id="@+id/relativeLayout2"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textView1"
-        android:paddingTop="20dip"
-        android:paddingBottom="20dip"
-        android:background="#e0e4eb" >
-
-        <TextView
-            android:id="@+id/job_details_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/lin1"
-            android:layout_alignParentTop="true"
-            android:layout_alignRight="@+id/lin1"
-            android:text="Job 1"
-            android:textColor="#778AB5"
-            android:background="#FFFFFF"
-            android:textSize="32dp"
-            android:textStyle="bold" />
-
-        <LinearLayout
-            android:id="@+id/lin1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/lin2"
-            android:layout_alignRight="@+id/lin2"
-            android:background="#FFFFFF"
-            android:layout_below="@+id/job_details_name"
-            android:orientation="horizontal" >
-
-            <TextView
-                android:id="@+id/statictext1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Template"
-                android:textColor="#000000"
-                android:textSize="24dp"/>
-
-            <TextView
-                android:id="@+id/template_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="1"
-                android:textColor="#000000"
-                android:textSize="24dp"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/lin2"
-            android:layout_width="300dip"
-            android:layout_height="wrap_content"
-            android:background="#FFFFFF"
-            android:layout_below="@+id/lin1"
-            android:layout_centerHorizontal="true"
-            android:orientation="horizontal" >
-
-            <TextView
-                android:id="@+id/statictext2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/statictext1"
-                android:layout_centerHorizontal="true"
-                android:text="Template Pages"
-                android:textColor="#000000"
-                android:textSize="24dp"/>
-
-            <TextView
-                android:id="@+id/template_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="22"
-                android:textColor="#000000"
-                android:textSize="24dip"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/lin3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/lin2"
-            android:layout_alignRight="@+id/lin2"
-            android:layout_below="@+id/lin2"
-            android:background="#FFFFFF"
-            android:orientation="horizontal" >
-
-            <TextView
-                android:id="@+id/statictext3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/statictext2"
-                android:layout_centerHorizontal="true"
-                android:text="Forms Scanned"
-                android:textColor="#000000"
-                android:textSize="24dp"/>
-        </LinearLayout>
-
-    </RelativeLayout>
-
-    <RelativeLayout
         android:id="@+id/relativeLayout3"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
@@ -131,6 +31,117 @@
             android:layout_marginBottom="65dp"
             android:background="#FFFFFF"
             android:text="Button" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout2"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/textView1"
+        android:background="#e0e4eb"
+        android:paddingBottom="20dip"
+        android:paddingTop="20dip" >
+
+        <TextView
+            android:id="@+id/job_details_name"
+            android:layout_width="250dip"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:background="#FFFFFF"
+            android:text="Job 1"
+            android:textColor="#778AB5"
+            android:textSize="32dp"
+            android:paddingBottom="3dip"
+            android:paddingTop="3dip"
+            android:paddingLeft="10dip"
+            android:paddingRight="10dip"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/statictext1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/job_details_name"
+            android:layout_alignRight="@+id/job_details_name"
+            android:layout_below="@+id/job_details_name"
+            android:text="Template"
+            android:textColor="#000000"
+             android:paddingBottom="3dip"
+            android:paddingTop="3dip"
+            android:paddingLeft="10dip"
+            android:background="#FFFFFF"
+            android:textSize="16dp" />
+
+        <TextView
+            android:id="@+id/statictext2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/statictext1"
+            android:layout_alignRight="@+id/statictext1"
+            android:layout_below="@+id/statictext1"
+            android:text="Template Pages"
+            android:textColor="#000000"
+            android:background="#FFFFFF"
+            android:paddingBottom="3dip"
+            android:paddingTop="3dip"
+            android:paddingLeft="10dip"
+             android:textSize="16dp" />
+
+        <TextView
+            android:id="@+id/statictext3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/statictext2"
+            android:layout_alignRight="@+id/statictext2"
+            android:layout_below="@+id/statictext2"
+            android:text="Forms Scanned"
+            android:textColor="#000000"
+            android:background="#FFFFFF"
+            android:paddingBottom="3dip"
+            android:paddingLeft="10dip"
+            android:paddingTop="3dip"
+            android:textSize="16dp" />
+
+        <TextView
+            android:id="@+id/document_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/statictext1"
+            android:layout_alignBottom="@+id/statictext1"
+            android:layout_alignRight="@+id/statictext1"
+            android:paddingRight ="10dip"
+            
+            android:text="Document"
+            android:textColor="#778AB5"
+            android:textSize="16dp" />
+        
+         <TextView
+            android:id="@+id/sheet_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/statictext2"
+            android:layout_alignBottom="@+id/statictext2"
+            android:layout_alignRight="@+id/statictext2"
+            android:paddingRight ="10dip"
+            android:text="3"
+            android:textColor="#778AB5"
+            android:textSize="16dp" />
+
+         <TextView
+            android:id="@+id/iset_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/statictext3"
+            android:layout_alignBottom="@+id/statictext3"
+            android:layout_alignRight="@+id/statictext3"
+            android:paddingRight ="10dip"
+            android:text="18"
+            android:textColor="#778AB5"
+            android:textSize="16dp" />
+
     </RelativeLayout>
 
 </RelativeLayout>
