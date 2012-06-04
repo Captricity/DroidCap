@@ -2,47 +2,9 @@
     android:id="@+id/dark_side_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="top"
     android:background="#6187BA"
+    android:gravity="top"
     android:orientation="vertical" >
-
-    <Button
-        android:id="@+id/new_job"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:text="New Job" />
-
-    <Button
-        android:id="@+id/home"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_toLeftOf="@+id/new_job"
-        android:text="Home" />
-
-    <Button
-        android:id="@+id/next"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginRight="31dp"
-        android:layout_toLeftOf="@+id/home"
-        android:text="Next" />
-
-    <ListView
-        android:id="@android:id/list"
-        android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:layout_above="@+id/home"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/new_job"
-        android:layout_marginBottom="21dp"
-        android:cacheColorHint="#00000000"
-        android:background="#FFFFFF">
-
-    </ListView>
 
     <ProgressBar
         android:id="@android:id/empty"
@@ -51,6 +13,17 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:layout_marginTop="14dp" />
+
+    <ListView
+        android:id="@android:id/list"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_above="@+id/radioGroup1"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/textView1"
+        android:background="#FFFFFF"
+        android:cacheColorHint="#00000000" >
+    </ListView>
 
     <TextView
         android:id="@+id/textView1"
@@ -63,5 +36,39 @@
         android:textColor="#FFFFFF"
         android:textSize="32dp"
         android:textStyle="bold" />
+
+    <RadioGroup
+        android:id="@+id/radioGroup1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:checkedButton="@+id/radio0"
+        android:orientation="horizontal" >
+
+        <RadioButton
+            android:id="@+id/radio0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/radio1"
+            android:text="Name" />
+
+        <RadioButton
+            android:id="@+id/radio1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@+id/textView1"
+            android:text="Date" />
+    </RadioGroup>
+
+    <ImageView
+        android:id="@+id/setup_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:paddingTop="3dip"
+        android:paddingLeft="3dip"
+        android:src="@drawable/setup_marker" />
 
 </RelativeLayout>

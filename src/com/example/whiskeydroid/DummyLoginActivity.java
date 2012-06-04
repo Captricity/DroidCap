@@ -54,14 +54,22 @@ public class DummyLoginActivity extends ListActivity implements CaptricityResult
 	}
 	
 	@Override
+	public void onBackPressed() {
+		if (! isLoginView) {
+			applyRotation(0, -90);
+			isLoginView = ! isLoginView;
+		} else {
+			super.onBackPressed();
+		}
+	}
+	
+	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
-		/* TODO: Implement to job detail view 
-		JobData item = listItems.get(position);
-		Log.w("LDA", "You clicked " + item + "!");
-		Intent docDetailsIntent = new Intent(v.getContext(), DocumentDetailsActivity.class);
-		docDetailsIntent.putExtra(DocumentDetailsActivity.document_data_key, item);
-        startActivity(docDetailsIntent);
-        */
+		JobData job_data = listItems.get(position);
+		Log.w("Captricity", "You clicked " + job_data + "!");
+		Intent jobDetailsIntent = new Intent(v.getContext(), JobDetailsActivity.class);
+		jobDetailsIntent.putExtra(JobDetailsActivity.job_data_key, job_data);
+        startActivity(jobDetailsIntent);
 	}
 
 	public void onReceiveResult(int resultCode, Bundle resultData) {
@@ -104,11 +112,6 @@ public class DummyLoginActivity extends ListActivity implements CaptricityResult
 
 		// Create a new 3D rotation with the supplied parameter
 		// The animation listener is used to trigger the next animation
-		if (dark_side == null) {
-			Log.w("NICK", "FUCK");
-		} else {
-			Log.w("NICK", "yay");
-		}
 		final Flip3dAnimation rotation = new Flip3dAnimation(start, end, centerX, centerY);
 		rotation.setDuration(500);
 		rotation.setFillAfter(true);
