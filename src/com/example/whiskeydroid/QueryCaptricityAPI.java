@@ -53,6 +53,7 @@ public class QueryCaptricityAPI extends IntentService {
 	public static final String receiverKey = "receiver";
 	public static final String commandKey = "command";
 	public static final String listDocsCommand = "listdocs" ;
+	public static final String listJobsCommand = "listjobs" ;
 	public static final String docDetailsCommand = "docdetails" ;
 	public static final String postPhotoCommand = "postphoto" ;
 	public static final String launchJobCommand = "joblaunch" ;
@@ -80,7 +81,16 @@ public class QueryCaptricityAPI extends IntentService {
 			} catch(Exception e) {
 				b.putString(Intent.EXTRA_TEXT, e.toString());
 				receiver.send(ERROR, b);
-			}    
+			}
+		} else if (command.equals(listJobsCommand)) {
+			try {
+				ArrayList<JobData> results = getJobDataList();
+				b.putParcelableArrayList(resultKey, results);
+				receiver.send(FINISHED, b);
+			} catch(Exception e) {
+				b.putString(Intent.EXTRA_TEXT, e.toString());
+				receiver.send(ERROR, b);			
+			}
 		} else if (command.equals(docDetailsCommand)) {
 			int doc_id = intent.getIntExtra(docIdKey, 0);
 			DocumentData doc = getDocumentDetails(doc_id);

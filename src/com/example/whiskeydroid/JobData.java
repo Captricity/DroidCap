@@ -29,6 +29,10 @@ public class JobData implements Parcelable {
 		}	
 	}
 	
+	public String getName() {
+		return name;
+	}
+	
 	public int getPendingISets() {
 		if (status.equals("setup")) {
 			return instance_set_count;

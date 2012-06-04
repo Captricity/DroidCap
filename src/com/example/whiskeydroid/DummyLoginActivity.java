@@ -26,8 +26,8 @@ public class DummyLoginActivity extends ListActivity implements CaptricityResult
 	private View dark_side;
 	private boolean isLoginView = true;
 	public CaptricityResultReceiver mReceiver;
-	public ArrayAdapter<DocumentData> adapter;
-	ArrayList<DocumentData> listItems = new ArrayList<DocumentData>();
+	public JobDataAdapter adapter;
+	ArrayList<JobData> listItems = new ArrayList<JobData>();
 
 	/** Called when the activity is first created. */
 	@Override
@@ -45,28 +45,30 @@ public class DummyLoginActivity extends ListActivity implements CaptricityResult
 	
 		createSignInButton();
 		
-		adapter = new ArrayAdapter<DocumentData>(this, android.R.layout.simple_list_item_1, listItems);
+		adapter = new JobDataAdapter(this, R.layout.job_data_item, listItems);
 		setListAdapter(adapter);
 	    final Intent intent = new Intent(Intent.ACTION_SYNC, null, this, QueryCaptricityAPI.class);
 	    intent.putExtra(QueryCaptricityAPI.receiverKey, mReceiver);
-	    intent.putExtra(QueryCaptricityAPI.commandKey, QueryCaptricityAPI.listDocsCommand);
+	    intent.putExtra(QueryCaptricityAPI.commandKey, QueryCaptricityAPI.listJobsCommand);
 	    startService(intent);
 	}
 	
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
-		DocumentData item = listItems.get(position);
+		/* TODO: Implement to job detail view 
+		JobData item = listItems.get(position);
 		Log.w("LDA", "You clicked " + item + "!");
 		Intent docDetailsIntent = new Intent(v.getContext(), DocumentDetailsActivity.class);
 		docDetailsIntent.putExtra(DocumentDetailsActivity.document_data_key, item);
         startActivity(docDetailsIntent);
+        */
 	}
 
 	public void onReceiveResult(int resultCode, Bundle resultData) {
 		if (resultCode == QueryCaptricityAPI.FINISHED) {
-			ArrayList<DocumentData> results = resultData.getParcelableArrayList(QueryCaptricityAPI.resultKey);
+			ArrayList<JobData> results = resultData.getParcelableArrayList(QueryCaptricityAPI.resultKey);
 			listItems.clear();
-			for (DocumentData result:results) {
+			for (JobData result:results) {
 				listItems.add(result);
 			}
 			adapter.notifyDataSetChanged();

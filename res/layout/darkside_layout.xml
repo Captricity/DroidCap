@@ -1,7 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/dark_side_view"
-    android:layout_width="fill_parent"
+    android:layout_width="match_parent"
     android:layout_height="fill_parent"
+    android:gravity="center_horizontal"
     android:orientation="vertical" >
 
      <ListView android:id="@android:id/list"
@@ -10,5 +11,12 @@
                android:background="#00FF00"
                android:layout_weight="1"
                android:drawSelectorOnTop="false"/>
+     
+     <ProgressBar
+         android:id="@android:id/empty"
+         style="?android:attr/progressBarStyleLarge"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_centerInParent="true" />
      
 </RelativeLayout>
