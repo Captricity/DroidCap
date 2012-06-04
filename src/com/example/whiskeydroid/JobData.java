@@ -85,6 +85,10 @@ public class JobData implements Parcelable {
 		return instance_set_count;
 	}
 	
+	public void setInstanceSetCount(int count) {
+		instance_set_count = count;
+	}
+	
 	public int getDocumentId() {
 		return document_id;
 	}
