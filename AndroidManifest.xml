@@ -12,7 +12,7 @@
     <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
-        android:icon="@drawable/cap_launcher"
+        android:icon="@drawable/cap_launcher2"
         android:label="@string/app_name" >
         <activity android:name="ListDocumentsActivity" android:label="Choose Template to Upload to">
         </activity>

@@ -51,14 +51,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@+id/radio1"
-            android:text="Name" />
+            android:text="Date" />
 
         <RadioButton
             android:id="@+id/radio1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignRight="@+id/textView1"
-            android:text="Date" />
+            android:text="Name" />
     </RadioGroup>
 
     <ImageView
@@ -67,8 +67,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:paddingTop="3dip"
-        android:paddingLeft="3dip"
+        android:paddingTop="5dip"
+        android:paddingLeft="6dip"
         android:src="@drawable/setup_marker" />
 
 </RelativeLayout>

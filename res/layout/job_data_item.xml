@@ -54,7 +54,8 @@
                     android:id="@+id/setup_icon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/setup_marker"
+                    android:paddingTop="7dip"
+                    android:src="@drawable/small_setup_marker"
                     android:visibility="gone" />
 
                 <TextView
@@ -72,6 +73,7 @@
                     android:id="@+id/done_icon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:paddingTop="7dip"
                     android:src="@drawable/small_checkmark"
                     android:visibility="gone" />
 

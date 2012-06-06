@@ -1,6 +1,8 @@
 package com.example.whiskeydroid;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import android.animation.AnimatorInflater;
 import android.animation.ObjectAnimator;
@@ -11,11 +13,14 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.Toast;
 
 
 /* get your flip on
@@ -28,6 +33,26 @@ public class DummyLoginActivity extends ListActivity implements CaptricityResult
 	public CaptricityResultReceiver mReceiver;
 	public JobDataAdapter adapter;
 	ArrayList<JobData> listItems = new ArrayList<JobData>();
+	OnClickListener radio_listener = new OnClickListener() {
+	    public void onClick(View v) {
+	        RadioButton rb = (RadioButton) v;
+	        if (rb.getText().equals("Name")) {
+	        	Collections.sort(listItems, new Comparator<JobData>(){
+	        		public int compare(JobData rhs, JobData lhs) {
+	        			return rhs.getName().compareTo(lhs.getName());
+	        		}
+	        	});    	
+         	
+	        } else {
+		        Collections.sort(listItems, new Comparator<JobData>(){
+	        		public int compare(JobData rhs, JobData lhs) {
+	        			return -1 * (rhs.getId() - lhs.getId());
+	        		}
+	        	});          	
+	        }
+			adapter.notifyDataSetChanged();
+	    }
+	};
 
 	/** Called when the activity is first created. */
 	@Override
@@ -42,6 +67,11 @@ public class DummyLoginActivity extends ListActivity implements CaptricityResult
 		login_view = findViewById(R.id.ll);
 		dark_side = findViewById(R.id.dsl);
 		dark_side.setVisibility(View.GONE);
+		
+		  final RadioButton radio_date = (RadioButton) findViewById(R.id.radio0);
+		  final RadioButton radio_name = (RadioButton) findViewById(R.id.radio1);
+		  radio_date.setOnClickListener(radio_listener);
+		  radio_name.setOnClickListener(radio_listener);
 	
 		createSignInButton();
 		
