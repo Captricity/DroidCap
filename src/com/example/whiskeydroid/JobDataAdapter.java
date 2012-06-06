@@ -91,6 +91,17 @@ public class JobDataAdapter extends ArrayAdapter<JobData> {
 			progress_icon.setVisibility(View.VISIBLE);
 		}
 		
+		ImageView img = (ImageView) jobDataView.findViewById(R.id.image_preview);
+		if (job_data.getId() == 1476) {
+			img.setImageResource(R.drawable.thumb1476);
+		} else if (job_data.getId() == 1478) { 
+			img.setImageResource(R.drawable.thumb1478);
+		} else if (job_data.getId() == 1479) { 
+			img.setImageResource(R.drawable.thumb1479);
+		} else {
+			img.setImageResource(R.drawable.aidfsurveythumb);
+		}
+		
 		return jobDataView;
 	}
 

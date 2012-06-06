@@ -66,7 +66,6 @@ public class DummyLoginActivity extends ListActivity implements CaptricityResult
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		JobData job_data = listItems.get(position);
-		Log.w("Captricity", "You clicked " + job_data + "!");
 		Intent jobDetailsIntent = new Intent(v.getContext(), JobDetailsActivity.class);
 		jobDetailsIntent.putExtra(JobDetailsActivity.job_data_key, job_data);
         startActivity(jobDetailsIntent);
