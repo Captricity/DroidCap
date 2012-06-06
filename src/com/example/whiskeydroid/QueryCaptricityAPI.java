@@ -45,9 +45,9 @@ public class QueryCaptricityAPI extends IntentService {
 	public static final int INSTANCE_POST_FINISHED = 4;	
 	public static final int JOB_LAUNCHED = 5;	
 	public static final int SHRED_RECEIVED = 6;	
-	public static final String api_base_url = "https://nightly.captricity.com/api/";
+	public static final String api_base_url = "https://production.captricity.com/api/";
 	public static final String api_user_agent = "nick-android-app-v0-0.1";
-	public static final String api_auth_token = "db5fa1b05d17441191a921c390d5d34c";
+	public static final String api_auth_token = "32010babb33a4fff88e641624c4b0c3b";
 	public static final String api_version = "0.01b";
 	public static final String resultKey = "results";
 	public static final String receiverKey = "receiver";

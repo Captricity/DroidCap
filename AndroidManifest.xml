@@ -21,13 +21,13 @@
         <activity android:name="AddImagesActivity"></activity>
         <activity android:name="LaunchJobActivity"></activity>
         <activity android:name="SpotCheckActivity" android:label="Spot Check Results"></activity>
-        <activity android:name="DummyLoginActivity" android:screenOrientation="portrait">
+        <activity android:name="DummyLoginActivity" android:screenOrientation="portrait" android:label="Captricity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name="JobDetailsActivity"></activity>
+        <activity android:name="JobDetailsActivity" android:screenOrientation="portrait" android:label="Captricity"></activity>
     </application>
 
 </manifest>

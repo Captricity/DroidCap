@@ -31,12 +31,46 @@ public class JobDetailsActivity extends Activity implements CaptricityResultRece
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.jobdetails);
+		hideUploadingUI();
+		showImageCaptureUI();
 		setJob();
 		displayJobData();
 		createTakePhotoButton();
 		createPickPhotoButton();
 		createCancelButton();
 	}
+	
+	private void hideUploadingUI() {
+		View upload_text = findViewById(R.id.uploading_text);
+		upload_text.setVisibility(View.GONE);
+		View upload_spinner = findViewById(R.id.uploading_spinner);
+		upload_spinner.setVisibility(View.GONE);
+	}
+	
+	private void showUploadingUI() {
+		View upload_text = findViewById(R.id.uploading_text);
+		upload_text.setVisibility(View.VISIBLE);
+		View upload_spinner = findViewById(R.id.uploading_spinner);
+		upload_spinner.setVisibility(View.VISIBLE);	
+	}
+	
+
+	private void hideImageCaptureUI() {
+		Button add_images_button = (Button) findViewById(R.id.photo_button);
+		add_images_button.setVisibility(View.GONE);
+		Button pick_images_button = (Button) findViewById(R.id.browse_button);
+		pick_images_button.setVisibility(View.GONE);
+		
+	}
+	
+	private void showImageCaptureUI() {
+		Button add_images_button = (Button) findViewById(R.id.photo_button);
+		add_images_button.setVisibility(View.VISIBLE);
+		Button pick_images_button = (Button) findViewById(R.id.browse_button);
+		pick_images_button.setVisibility(View.VISIBLE);
+		
+	}
+	
 
 	private void displayJobData() {
 		TextView job_name = (TextView) findViewById(R.id.job_details_name);
@@ -44,8 +78,8 @@ public class JobDetailsActivity extends Activity implements CaptricityResultRece
 
 		TextView document_name = (TextView) findViewById(R.id.document_name);
 		String doc_name = job.getDocumentName();
-		if (doc_name.length() > 16) {
-			doc_name = doc_name.substring(0, 16);
+		if (doc_name.length() > 17) {
+			doc_name = doc_name.substring(0, 17);
 		}
 		document_name.setText(doc_name);
 
@@ -90,12 +124,15 @@ public class JobDetailsActivity extends Activity implements CaptricityResultRece
 		});
 	}
 	
-	   
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
+        	hideImageCaptureUI();
+        	showUploadingUI();
         	postImageToServer();
         } else if (requestCode == PICK_PHOTO && resultCode == RESULT_OK) {
+        	hideImageCaptureUI();
+        	showUploadingUI();
             Uri selectedImage = data.getData();
             String[] filePathColumn = {MediaStore.Images.Media.DATA};
 
@@ -128,12 +165,13 @@ public class JobDetailsActivity extends Activity implements CaptricityResultRece
 		
 		if (job == null) {
 			success = false;
-		}
-	    if (job.getSheetCount() != 1) {
-	    	message = "Upload to multipage documents not currently supported!";
+		} else if (job.getSheetCount() > 1) {
+	    	message = "Upload to multipage templates not currently supported!";
     		success = false;
-    	}
-	    if (! job.getStatus().equals("setup")) {
+    	} else if (job.getSheetCount() == 0) {
+    		message = "This job does not have a template yet!";
+    		success = false;
+    	} else if (! job.getStatus().equals("setup")) {
 	    	message = "Job must be in 'setup' status to receive uploads!";
 	    	success = false;
 	    }
@@ -180,20 +218,29 @@ public class JobDetailsActivity extends Activity implements CaptricityResultRece
 
 	public void onReceiveResult(int resultCode, Bundle resultData) {
 		if (resultCode == QueryCaptricityAPI.INSTANCE_POST_FINISHED) {
-			new AlertDialog.Builder(this).setMessage("Your form has been successfully uploaded!")
-    		.setTitle("Form Uploaded")
-    		.setCancelable(true)  
-    		.setNeutralButton(android.R.string.ok,  
-    				new DialogInterface.OnClickListener() {  
-    					public void onClick(DialogInterface dialog, int whichButton){
-    						dialog.dismiss();
-    					}  
-    				})  
-    		.show();    			
+			showUploadSuccessDialog();
 			job.setInstanceSetCount(job.getInstanceSetCount() + 1);
 			displayJobData();
+			hideUploadingUI();
+			showImageCaptureUI();
 		}	
 	}
- 
+	
+	private void showUploadSuccessDialog() {
+		try {
+			new AlertDialog.Builder(this).setMessage("Your form has been successfully uploaded!")
+			.setTitle("Form Uploaded")
+			.setCancelable(true)  
+			.setNeutralButton(android.R.string.ok,  
+					new DialogInterface.OnClickListener() {  
+				public void onClick(DialogInterface dialog, int whichButton){
+					dialog.dismiss();
+				}  
+			}).show();    			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 
 }
