@@ -1,14 +1,21 @@
 package com.example.whiskeydroid;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+
+import org.apache.commons.codec.binary.Hex;
 
 import android.animation.AnimatorInflater;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -116,16 +123,51 @@ public class DummyLoginActivity extends ListActivity implements CaptricityResult
 		Button sign_in_button = (Button) findViewById(R.id.sign_in_button);
 		sign_in_button.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				signIn(v);
+				signInReal(v);
 			}
 		});
 	}
+	
+	private String getSignature(String return_url, String third_party_id) {
+		String RETURN_URL_KEY = "return-url";
+		String THIRD_PARTY_ID_KEY = "third-party-id";
+		String secret_key_value = "0d13837587624ffba73b10eb01a9df5f";
+		
+		String hash_me = secret_key_value + ":" + RETURN_URL_KEY + "=" + URLEncoder.encode(return_url) + "&" + THIRD_PARTY_ID_KEY + "=" + URLEncoder.encode(third_party_id);
+		MessageDigest digest = null;
+		try {
+			digest =  MessageDigest.getInstance("SHA-256");
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+			return "";
+		}
+		try {
+			digest.update(hash_me.getBytes("UTF-8"));
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+			return "";
+		} 
+		return new String(Hex.encodeHex(digest.digest()));
+	}
 
+	private Uri generateLoginURI() {  
+		String TARGET_BASE_ADDRESS = "192.168.2.25:8000";
+		String return_url = "captricity://hi-there?meat=1&veg=2";
+		String third_party_id = "1";
+		String signature = getSignature(return_url, third_party_id);
+		String target = "http://" + TARGET_BASE_ADDRESS + "/accounts/request-access/?" + "return-url=" + URLEncoder.encode(return_url) + "&third-party-id=" + third_party_id + "&signature=" + signature;
+		Log.w("NICK", target);
+		return Uri.parse(target);
+	}
+	private void signInReal(View v) {
+		Uri login_uri = generateLoginURI();
+		Intent launchBrowser = new Intent(Intent.ACTION_VIEW, login_uri); 
+		startActivity(launchBrowser);
+		overridePendingTransition(R.anim.rotate_in,R.anim.rotate_out);	
+	}
+	
 	// http://stackoverflow.com/questions/7853997/android-rotate-animation-between-two-activity
-	private void signIn(View v) {
-		//Intent listDocIntent = new Intent(v.getContext(), ListDocumentsActivity.class);
-		//startActivity(listDocIntent);
-		//overridePendingTransition(R.anim.rotate_in,R.anim.rotate_out);
+	private void signInDummy(View v) {
 		if (isLoginView) {
 			applyRotation(0, 90);
 		} else {
