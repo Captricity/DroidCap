@@ -23,10 +23,16 @@
         <activity android:name="SpotCheckActivity" android:label="Spot Check Results"></activity>
         <activity android:name="DummyLoginActivity" android:screenOrientation="portrait" android:label="Captricity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
+            <intent-filter>
+                <data android:scheme="captricity" />
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+		</activity>
         <activity android:name="JobDetailsActivity" android:screenOrientation="portrait" android:label="Captricity"></activity>
     </application>
 
