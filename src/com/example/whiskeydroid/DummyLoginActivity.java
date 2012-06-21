@@ -123,7 +123,7 @@ public class DummyLoginActivity extends ListActivity implements CaptricityResult
 		Button sign_in_button = (Button) findViewById(R.id.sign_in_button);
 		sign_in_button.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				signInReal(v);
+				signInDummy(v);
 			}
 		});
 	}
@@ -131,7 +131,7 @@ public class DummyLoginActivity extends ListActivity implements CaptricityResult
 	private String getSignature(String return_url, String third_party_id) {
 		String RETURN_URL_KEY = "return-url";
 		String THIRD_PARTY_ID_KEY = "third-party-id";
-		String secret_key_value = "0d13837587624ffba73b10eb01a9df5f";
+		String secret_key_value = "756f4f202fac4bc3880601396c569b32";
 		
 		String hash_me = secret_key_value + ":" + RETURN_URL_KEY + "=" + URLEncoder.encode(return_url) + "&" + THIRD_PARTY_ID_KEY + "=" + URLEncoder.encode(third_party_id);
 		MessageDigest digest = null;
@@ -153,7 +153,7 @@ public class DummyLoginActivity extends ListActivity implements CaptricityResult
 	private Uri generateLoginURI() {  
 		String TARGET_BASE_ADDRESS = "192.168.2.25:8000";
 		String return_url = "captricity://hi-there?meat=1&veg=2";
-		String third_party_id = "1";
+		String third_party_id = "2";
 		String signature = getSignature(return_url, third_party_id);
 		String target = "http://" + TARGET_BASE_ADDRESS + "/accounts/request-access/?" + "return-url=" + URLEncoder.encode(return_url) + "&third-party-id=" + third_party_id + "&signature=" + signature;
 		Log.w("NICK", target);

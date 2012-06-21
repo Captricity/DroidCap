@@ -4,12 +4,18 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.security.SecureRandom;
+import java.security.cert.X509Certificate;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -22,6 +28,8 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
+import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.impl.client.BasicResponseHandler;
@@ -45,10 +53,10 @@ public class QueryCaptricityAPI extends IntentService {
 	public static final int INSTANCE_POST_FINISHED = 4;	
 	public static final int JOB_LAUNCHED = 5;	
 	public static final int SHRED_RECEIVED = 6;	
-	public static final String api_base_url = "https://production.captricity.com/api/";
-	public static final String api_user_agent = "nick-android-app-v0-0.1";
-	public static final String api_auth_token = "32010babb33a4fff88e641624c4b0c3b";
-	public static final String api_version = "0.01b";
+	public static final String api_base_url = "https://nightly.captricity.com/api/";
+	public static final String api_user_agent = "captricity-mobile-demo-v0";
+	public static final String api_auth_token = "thisisbobstoken";
+	public static final String api_version = "0.1";
 	public static final String resultKey = "results";
 	public static final String receiverKey = "receiver";
 	public static final String commandKey = "command";
@@ -253,7 +261,16 @@ public class QueryCaptricityAPI extends IntentService {
     }
     
     private String executeAPICall(HttpRequestBase request) {
+    	
+    	
     	HttpClient httpclient = new DefaultHttpClient();
+    	
+    	/* Only for use with dev clusters: allow unverified SSL */
+    	SSLSocketFactory sf = (SSLSocketFactory) httpclient.getConnectionManager()
+    	    .getSchemeRegistry().getScheme("https").getSocketFactory();
+    	sf.setHostnameVerifier(new AllowAllHostnameVerifier());
+    	/* End allowing unverified SSL */
+    	
     	ResponseHandler<String> responseHandler = new BasicResponseHandler();
     	try {
 			return httpclient.execute(request, responseHandler);
