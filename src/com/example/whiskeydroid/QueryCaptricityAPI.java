@@ -32,12 +32,14 @@ import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONTokener;
 
 import android.app.IntentService;
 import android.content.Intent;
@@ -159,10 +161,40 @@ public class QueryCaptricityAPI extends IntentService {
  
 	/* http://stackoverflow.com/questions/2935946/sending-images-using-http-post */
     private String postImageToServer(int job_id, String path_to_photo) {
-    	String url = "shreddr/job/" + Integer.toString(job_id);
-    	HttpPost api_post = createAPIPost(url);
+    	String iset_creation_url = "shreddr/job/" + Integer.toString(job_id) + "/instance-set/";
+    	HttpPost iset_api_post = createAPIPost(iset_creation_url);
+    	StringBody iset_name;
+		try {
+			iset_name = new StringBody("Iset from Mobile");
+		} catch (UnsupportedEncodingException e2) {
+			e2.printStackTrace();
+			return "";
+		}
+    	MultipartEntity reqEntity = new MultipartEntity();
+    	reqEntity.addPart("name", iset_name);
+    	iset_api_post.setEntity(reqEntity);
+    	String result = executeAPICall(iset_api_post);
+    	JSONObject json_iset = null;
+    	int iset_id = 0;
+		try {
+			json_iset = (JSONObject) new JSONTokener(result).nextValue();
+			iset_id = json_iset.getInt("id");
+		} catch (JSONException e1) {
+			e1.printStackTrace();
+			return "";
+		}
+		Log.w("Uploading to Iset", Integer.toString(iset_id));
+		String post_url = "shreddr/instance-set/" + Integer.toString(iset_id) + "/page/0";
+    	HttpPost api_post = createAPIPost(post_url);
     	MultipartEntity multipart = new MultipartEntity();
-    	multipart.addPart("images", new FileBody(new File(path_to_photo)));
+    	multipart.addPart("image", new FileBody(new File(path_to_photo)));
+    	StringBody name = null;
+		try {
+			name = new StringBody("mobile-instance");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+    	multipart.addPart("image_name", name);
     	api_post.setEntity(multipart);
     	return executeAPICall(api_post);
     	/*
