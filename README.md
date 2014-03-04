@@ -14,9 +14,10 @@ The following are some useful pieces of the code:
 
 ### Authorization and Authentication
 
-After you have created an API application, you need to implement a workflow
-that will allow your application's users to authorize your application to use
-the Captricity API on their behalf.
+After you have created an API application, you need to implement a workflow to
+allow your users to authorize you to use the Captricity API on their behalf.  To
+use the Captricity API as a particular user, you need an API token for that
+user.
 
 The [App Authorization with the Captricity API Quickstart](https://shreddr.captricity.com/developer/quickstart/app-authorization/)
 contains a high-level overview of a standard authorization workflow.
@@ -27,13 +28,15 @@ You need two key pieces of information once you [create your application on the 
 * The application secret key (a 32 character hex string, listed as "Secret key" on the developer).
 
 The high-level idea is that your App should craft an authorization URL (signed
-with your application's secret key) that will direct the user to a Captricity
+with your application's secret key) that directs the user to a Captricity
 page where they can authorize your app.  Once they authorize your app, we will
 redirect them to a URL specified in the authorization URL (often times back to
-your app).  The return URL will contain with it an API token that you can use
+your app).  The callback will contain an API token that you can use
 to interact with the API as the user.
 
-* [Here we craft the authorization URL once the user presses the login button](https://github.com/Captricity/DroidCap/blob/master/src/com/example/whiskeydroid/DummyLoginActivity.java#L154).  [Documentation is here](https://shreddr.captricity.com/developer/overview/#authentication).  [Quickstart is here](https://shreddr.captricity.com/developer/quickstart/app-authorization/).
+* [Here we craft the authorization URL once the user presses the login button](https://github.com/Captricity/DroidCap/blob/master/src/com/example/whiskeydroid/DummyLoginActivity.java#L154).
+    * [Documentation](https://shreddr.captricity.com/developer/overview/#authentication).
+    * [Quickstart](https://shreddr.captricity.com/developer/quickstart/app-authorization/).
 * [Here we direct the user to the Captricity site using an Intent](https://github.com/Captricity/DroidCap/blob/master/src/com/example/whiskeydroid/DummyLoginActivity.java#L166).
 * [Here register the captricity:// scheme so we will be able to handle the callback](https://github.com/Captricity/DroidCap/blob/master/AndroidManifest.xml#L34).
 * [Here we handle the callback.  This is where you harvest the user's API token](https://github.com/Captricity/DroidCap/blob/master/src/com/example/whiskeydroid/CapLogin.java#L17).
@@ -42,7 +45,7 @@ to interact with the API as the user.
 ### Using the API
 
 See the Related Work section below for details on the particular pattern we are
-using to interact with the Captricity API.  Here is [the module that interacts with the API](https://github.com/Captricity/DroidCap/blob/master/src/com/example/whiskeydroid/QueryCaptricityAPI.java).  Note that this app still uses the beta API.  We recommend that you [interact with the latest API version](the://shreddr.captricity.com/developer/api-reference/).
+using to interact with the Captricity API.  Here is [the module that interacts with the API](https://github.com/Captricity/DroidCap/blob/master/src/com/example/whiskeydroid/QueryCaptricityAPI.java).  Note that this app still uses the beta API.  We recommend that you [interact with the latest API version](https://shreddr.captricity.com/developer/api-reference/).
 
 
 
